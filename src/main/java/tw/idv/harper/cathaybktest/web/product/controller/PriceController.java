@@ -45,4 +45,20 @@ public class PriceController {
         return ResponseEntity.ok(response);
     }
 
+
+    // 修改某日價格
+    @PutMapping
+    public ResponseEntity<Core> editPrice(@RequestBody ProductDTO productDTO) {
+        Core response = new Core();
+        response.setSuccessful(false);
+
+        try {
+            response = priceService.editPrice(productDTO.getPriceId(), productDTO.getPrice());
+        } catch (Exception e) {
+            response.setSuccessful(false);
+            response.setMessage(e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

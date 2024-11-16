@@ -125,4 +125,35 @@ public class PriceServiceImpl implements PriceService {
 
     }
 
+
+    @Transactional
+    @Override
+    public Core editPrice(Long priceId, BigDecimal price) {
+        Core response = new Core();
+        response.setSuccessful(false);
+
+        // 檢查輸入參數
+        if (priceId == null || price == null) {
+            response.setMessage("輸入錯誤");
+            return response;
+        }
+
+        // 查詢資料庫
+        Price oldPrice = priceRepository.findByPriceId(priceId);
+
+        // 如果沒有找到結果
+        if (oldPrice == null) {
+            response.setMessage("找不到資料");
+            return response;
+        }
+
+        // 更新價格
+        oldPrice.setPrice(price);
+        Price newPrice = priceRepository.save(oldPrice);
+
+        response.setMessage("修改成功");
+        response.setSuccessful(true);
+        response.setData(newPrice);
+        return response;
+    }
 }

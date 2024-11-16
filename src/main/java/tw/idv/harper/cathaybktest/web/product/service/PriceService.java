@@ -12,4 +12,6 @@ public interface PriceService {
     Core addPrices(PriceDTO priceDTO);
 
     Core searchPrice(String productId, Long date);
+
+    Core editPrice(Long priceId, BigDecimal price);
 }

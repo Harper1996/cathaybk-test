@@ -20,6 +20,7 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
             "AND pe.date = :date")
     List<Object[]> findDatesByProductIdAndDate(String productId, Long date);
 
+    Price findByPriceId(Long priceId);
 }
 
 
