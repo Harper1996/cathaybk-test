@@ -67,6 +67,8 @@ public class PriceController {
         return ResponseEntity.ok(response);
     }
 
+
+    // 刪除某日價格
     @DeleteMapping("/{priceId}")
     public ResponseEntity<Core> deletePrice(@PathVariable Long priceId) {
         Core response = new Core();
@@ -82,6 +84,7 @@ public class PriceController {
     }
 
 
+    // 計算漲跌
     @GetMapping("/change/{productId}")
     public ResponseEntity<Core> calculateChange(
             @PathVariable String productId,
@@ -97,6 +100,7 @@ public class PriceController {
         return ResponseEntity.ok(response);
     }
 
+    // 計算漲跌幅
     @GetMapping("/change-percentage/{productId}")
     public ResponseEntity<Core> calculateChangePercentage(
             @PathVariable String productId,
