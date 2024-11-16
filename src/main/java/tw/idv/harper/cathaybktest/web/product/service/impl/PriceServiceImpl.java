@@ -156,4 +156,31 @@ public class PriceServiceImpl implements PriceService {
         response.setData(newPrice);
         return response;
     }
+
+    @Transactional
+    @Override
+    public Core deletePrice(Long priceId) {
+        Core response = new Core();
+        response.setSuccessful(false);
+
+        // 檢查輸入參數
+        if (priceId == null) {
+            response.setMessage("輸入錯誤，priceId 不得為空");
+            return response;
+        }
+
+        // 查詢資料庫，確認記錄是否存在
+        if (!priceRepository.existsById(priceId)) {
+            response.setMessage("找不到對應的價格資料");
+            return response;
+        }
+
+        // 刪除記錄
+        priceRepository.deleteById(priceId);
+
+        // 返回成功訊息
+        response.setSuccessful(true);
+        response.setMessage("刪除成功");
+        return response;
+    }
 }

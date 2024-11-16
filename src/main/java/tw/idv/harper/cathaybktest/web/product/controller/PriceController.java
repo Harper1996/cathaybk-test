@@ -61,4 +61,18 @@ public class PriceController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{priceId}")
+    public ResponseEntity<Core> deletePrice(@PathVariable Long priceId) {
+        Core response = new Core();
+        response.setSuccessful(false);
+
+        try {
+            response = priceService.deletePrice(priceId);
+        } catch (Exception e) {
+            response.setSuccessful(false);
+            response.setMessage(e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }
