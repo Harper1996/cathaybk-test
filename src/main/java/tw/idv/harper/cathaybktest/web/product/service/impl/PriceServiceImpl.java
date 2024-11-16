@@ -3,10 +3,12 @@ package tw.idv.harper.cathaybktest.web.product.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import tw.idv.harper.cathaybktest.core.pojo.Core;
 import tw.idv.harper.cathaybktest.web.product.dao.PriceRepository;
 import tw.idv.harper.cathaybktest.web.product.dao.ProductRepository;
 import tw.idv.harper.cathaybktest.web.product.dto.PriceDTO;
+import tw.idv.harper.cathaybktest.web.product.dto.ProductDTO;
 import tw.idv.harper.cathaybktest.web.product.service.PriceService;
 import tw.idv.harper.cathaybktest.web.product.vo.Price;
 
@@ -24,6 +26,7 @@ public class PriceServiceImpl implements PriceService {
 
 
     @Transactional
+    @Override
     public Core addPrices(PriceDTO priceDTO) {
         Core response = new Core();
         response.setSuccessful(false);
@@ -76,4 +79,50 @@ public class PriceServiceImpl implements PriceService {
         response.setMessage("加入成功");
         return response;
     }
+
+    @Transactional
+    @Override
+    public Core searchPrice(String productId, Long date) {
+        Core response = new Core();
+        response.setSuccessful(false);
+
+        // 檢查資料是否存在
+        if (!StringUtils.hasText(productId) || date == null) {
+            response.setMessage("輸入錯誤");
+            return response;
+        }
+
+
+        // 查詢資料庫
+        List<Object[]> results  = priceRepository.findDatesByProductIdAndDate(productId, date);
+
+        // 如果沒有找到結果
+        if (results.isEmpty()) {
+            response.setMessage("找不到資料");
+            return response;
+        }
+
+        // 將結果轉換為 DTO 列表
+        List<ProductDTO> productDTOs = results.stream().map(object -> {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductId((String) object[0]);  // productId
+            productDTO.setName((String) object[1]);       // name
+            productDTO.setShortName((String) object[2]);  // shortName
+            productDTO.setDate((Long) object[3]);         // date
+            productDTO.setPrice((BigDecimal) object[4]);  // price
+            productDTO.setPriceId((Long) object[5]);      // priceId
+            return productDTO;
+        }).collect(Collectors.toList());
+
+        ProductDTO productDTO = productDTOs.get(0);
+
+        // 設置返回結果
+        response.setSuccessful(true);
+        response.setMessage("成功");
+        response.setData(productDTO);
+
+        return response;
+
+    }
+
 }
