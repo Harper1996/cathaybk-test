@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import tw.idv.harper.cathaybktest.core.pojo.Core;
 import tw.idv.harper.cathaybktest.web.product.dto.PriceDTO;
 import tw.idv.harper.cathaybktest.web.product.dto.ProductDTO;
+import tw.idv.harper.cathaybktest.web.product.service.AnalysisService;
 import tw.idv.harper.cathaybktest.web.product.service.PriceService;
 import tw.idv.harper.cathaybktest.web.product.vo.Price;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/prices")
@@ -15,6 +18,9 @@ public class PriceController {
 
     @Autowired
     private PriceService priceService;
+
+    @Autowired
+    private AnalysisService analysisService;
 
     // 新增價格至DB
     @PostMapping()
@@ -68,6 +74,37 @@ public class PriceController {
 
         try {
             response = priceService.deletePrice(priceId);
+        } catch (Exception e) {
+            response.setSuccessful(false);
+            response.setMessage(e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/change/{productId}")
+    public ResponseEntity<Core> calculateChange(
+            @PathVariable String productId,
+            @RequestParam Long startTime,
+            @RequestParam Long endTime) {
+        Core response = new Core();
+        try {
+            response = analysisService.profit(startTime, endTime, productId);
+        } catch (Exception e) {
+            response.setSuccessful(false);
+            response.setMessage(e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/change-percentage/{productId}")
+    public ResponseEntity<Core> calculateChangePercentage(
+            @PathVariable String productId,
+            @RequestParam Long startTime,
+            @RequestParam Long endTime) {
+        Core response = new Core();
+        try {
+            response = analysisService.margin(startTime, endTime, productId);
         } catch (Exception e) {
             response.setSuccessful(false);
             response.setMessage(e.getMessage());

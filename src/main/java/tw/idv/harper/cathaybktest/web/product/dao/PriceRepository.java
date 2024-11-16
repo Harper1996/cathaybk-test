@@ -2,9 +2,11 @@ package tw.idv.harper.cathaybktest.web.product.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tw.idv.harper.cathaybktest.web.product.vo.Price;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -21,6 +23,9 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
     List<Object[]> findDatesByProductIdAndDate(String productId, Long date);
 
     Price findByPriceId(Long priceId);
+
+    @Query("SELECT pe.price FROM Price pe WHERE pe.productId = :productId AND pe.date = :date")
+    BigDecimal findPriceByProductIdAndDate(@Param("productId") String productId, @Param("date") Long date);
 }
 
 
