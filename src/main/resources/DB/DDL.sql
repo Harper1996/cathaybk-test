@@ -1,21 +1,15 @@
-DELIMITER //
+CREATE TABLE product (
+                         product_id VARCHAR(50) PRIMARY KEY,
+                         name VARCHAR(100),
+                         short_name VARCHAR(50),
+                         data_grouping BOOLEAN
+);
 
-CREATE PROCEDURE create_tables()
-BEGIN
-    CREATE TABLE IF NOT EXISTS product (
-        id VARCHAR(20) PRIMARY KEY,
-        name VARCHAR(255),
-        shortName VARCHAR(255),
-        dataGrouping BOOLEAN
-    );
+CREATE TABLE price (
+                       price_id SERIAL PRIMARY KEY,
+                       product_id VARCHAR(50),
+                       date BIGINT,
+                       price DECIMAL(10, 5),
+                       FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
 
-    CREATE TABLE IF NOT EXISTS price (
-        product_id VARCHAR(20),
-        date BIGINT,
-        price DECIMAL(10, 5),
-        PRIMARY KEY (product_id, date),
-        FOREIGN KEY (product_id) REFERENCES product(id)
-    );
-END//
-
-DELIMITER ;
