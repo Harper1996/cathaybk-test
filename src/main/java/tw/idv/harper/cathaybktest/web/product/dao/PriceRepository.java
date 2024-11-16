@@ -26,6 +26,8 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
 
     @Query("SELECT pe.price FROM Price pe WHERE pe.productId = :productId AND pe.date = :date")
     BigDecimal findPriceByProductIdAndDate(@Param("productId") String productId, @Param("date") Long date);
+
+    boolean existsByProductIdAndDate(String productId, Long date);
 }
 
 
